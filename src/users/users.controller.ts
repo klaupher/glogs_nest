@@ -67,8 +67,6 @@ export class UsersController {
   @Get()
   @Role(UserRole.ADMIN)
   async findUsers(@Query() query: FindUsersQueryDto) {
-    console.log('Query', query);
-    console.log(`Page: ${query.page} - Limit: ${query.limit}`);
     const found = await this.usersService.findUsers(query);
     return {
       found,

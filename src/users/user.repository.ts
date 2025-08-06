@@ -26,8 +26,12 @@ export class UserRepository {
     queryDto: FindUsersQueryDto,
   ): Promise<{ users: User[]; total: number; pages: number }> {
     queryDto.status = queryDto.status ?? true;
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
+    queryDto.page =
+      queryDto.page === undefined || queryDto.page < 1 ? 1 : queryDto.page;
+    queryDto.limit =
+      queryDto.limit === undefined || queryDto.limit > 100
+        ? 100
+        : queryDto.limit;
 
     const { email, name, status, role } = queryDto;
     const query = this.repo.createQueryBuilder('user');
@@ -44,7 +48,11 @@ export class UserRepository {
     }
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
-    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    if (queryDto.sort) {
+      Object.entries(queryDto.sort).forEach(([field, order]) => {
+        query.addOrderBy(`user.${field}`, order);
+      });
+    }
     query.select(['user.name', 'user.email', 'user.role', 'user.status']);
 
     const [users, total] = await query.getManyAndCount();
