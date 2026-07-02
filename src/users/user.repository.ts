@@ -55,7 +55,13 @@ export class UserRepository {
                 query.addOrderBy(`user.${field}`, order);
             });
         }
-        query.select(['user.name', 'user.email', 'user.role', 'user.status']);
+        query.select([
+            'user.id',
+            'user.name',
+            'user.email',
+            'user.role',
+            'user.status',
+        ]);
 
         const [users, total] = await query.getManyAndCount();
         const pages = Math.round(total / queryDto.limit);
