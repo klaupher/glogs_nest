@@ -1,0 +1,116 @@
+@baseUrl = http://localhost:5005
+@jwtToken = {{authSignIn.response.body.token}}
+@idUser = {{authSignUp.response.body.user.id}}
+@idAdmin = {{authSignInAdmin.response.body.user.id}}
+
+# @postUuid = {{createPostOwned.response.body.id}}
+# @postSlug = {{createPostOwned.response.body.slug}}
+# @imagePath = {{uploadImage.response.body.url}}
+# @imageUrl = {{baseUrl}}{{imagePath}}
+
+@userNameForTesting = Pedro
+@userEmailForTesting = pedro@email.com
+@userPasswordForTesting = 123456
+@userNewPasswordForTesting = 123456
+
+@userAdminNameForTesting = Fernanda
+@userAdminEmailForTesting = fernanda@email.com
+@userAdminPasswordForTesting = 123456
+@userAdminNewPasswordForTesting = 123456
+
+# AUTH ########################################################################
+
+### Auth login
+# @name authSignIn
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+  "email": "{{userEmailForTesting}}",
+  "password": "{{userPasswordForTesting}}"
+}
+
+### Auth ADMIN Login
+# @name authSignInAdmin
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+  "email": "{{userAdminEmailForTesting}}",
+  "password": "{{userAdminPasswordForTesting}}"
+}
+
+### Auth Signin
+# @name authSignUp
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "{{userEmailForTesting}}",
+  "name": "{{userNameForTesting}}",
+  "password": "{{userPasswordForTesting}}",
+  "passwordConfirmation": "{{userPasswordForTesting}}",
+}
+
+### Auth Me
+# @name authMe
+GET {{baseUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+# USER ########################################################################
+
+### Create user
+# @name createUserAdmin
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "name": "{{userNameForTesting}}",
+  "email": "{{userEmailForTesting}}",
+  "password": "{{userPasswordForTesting}}"
+}
+
+### Update user
+# @name updateUser
+PATCH {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "name": "{{userNameForTesting}} Otávio",
+  "email": "{{userEmailForTesting}}"
+}
+
+### Update user password
+# @name updateUserPassword
+PATCH {{baseUrl}}/user/me/password
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "currentPassword": "{{userPasswordForTesting}}",
+  "newPassword": "{{userNewPasswordForTesting}}"
+}
+
+### Get all Users
+# @name getAllUser
+GET {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Read one user
+# @name readOneUser
+GET {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Read one user
+# @name readOneUser
+GET {{baseUrl}}/user/{{idUser}}
+Authorization: Bearer {{jwtToken}}
+
+### Delete one user
+# @name deleteOneUser
+DELETE {{baseUrl}}/user/me
+Authorization: Bearer {{jwtToken}}

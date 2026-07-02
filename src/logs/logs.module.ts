@@ -7,12 +7,12 @@ import { LogsRepository } from './logs.repository';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Logs]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-  ],
-  controllers: [LogsController],
-  providers: [LogsService, LogsRepository],
-  exports: [LogsRepository],
+    imports: [
+        TypeOrmModule.forFeature([Logs]),
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+    ],
+    controllers: [LogsController],
+    providers: [LogsService, LogsRepository],
+    exports: [LogsRepository],
 })
 export class LogsModule {}
