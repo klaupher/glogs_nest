@@ -1,7 +1,8 @@
 @baseUrl = http://localhost:5005
 @jwtToken = {{authSignIn.response.body.token}}
-@idUser = {{authSignUp.response.body.user.id}}
-@idAdmin = {{authSignInAdmin.response.body.user.id}}
+@jwtTokenAdmin = {{authSignInAdmin.response.body.token}}
+@idUser = {{authMe.response.body.id}}
+@idAdmin = {{authMeAdmin.response.body.id}}
 
 # @postUuid = {{createPostOwned.response.body.id}}
 # @postSlug = {{createPostOwned.response.body.slug}}
@@ -58,6 +59,12 @@ GET {{baseUrl}}/auth/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
+### Auth Me Admin
+# @name authMeAdmin
+GET {{baseUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{jwtTokenAdmin}}
+
 # USER ########################################################################
 
 ### Create user
@@ -73,9 +80,9 @@ Content-Type: application/json
 
 ### Update user
 # @name updateUser
-PATCH {{baseUrl}}/user/me
+PATCH {{baseUrl}}/user/{{idAdmin}}
 Content-Type: application/json
-Authorization: Bearer {{jwtToken}}
+Authorization: Bearer {{jwtTokenAdmin}}
 
 {
   "name": "{{userNameForTesting}} Otávio",
@@ -97,7 +104,7 @@ Authorization: Bearer {{jwtToken}}
 # @name getAllUser
 GET {{baseUrl}}/user
 Content-Type: application/json
-Authorization: Bearer {{jwtToken}}
+Authorization: Bearer {{jwtTokenAdmin}}
 
 ### Read one user
 # @name readOneUser
@@ -112,5 +119,5 @@ Authorization: Bearer {{jwtToken}}
 
 ### Delete one user
 # @name deleteOneUser
-DELETE {{baseUrl}}/user/me
+DELETE {{baseUrl}}/user/{{idUser}}
 Authorization: Bearer {{jwtToken}}

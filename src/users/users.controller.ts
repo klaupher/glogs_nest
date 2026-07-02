@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
     Param,
@@ -28,24 +29,13 @@ import { type AuthenticatedRequest } from '../auth/types/authenticated-request';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Post()
+    @Get()
     @Role(UserRole.ADMIN)
-    async createAdminUser(
-        @Body(ValidationPipe) createUserDto: CreateUserDto,
-    ): Promise<ReturnUserDto> {
-        const user = await this.usersService.createAdminUser(createUserDto);
+    async findUsers(@Query() query: FindUsersQueryDto) {
+        const found = await this.usersService.findUsers(query);
         return {
-            user,
-            message: 'Administrador cadastrado com sucesso',
-        };
-    }
-
-    @Get('me')
-    @Role(UserRole.USER)
-    async getMe(@Req() req: AuthenticatedRequest): Promise<{ user: User }> {
-        const user = await this.usersService.findUserById(req.user!.id!);
-        return {
-            user,
+            found,
+            message: 'Usuários encontrados',
         };
     }
 
@@ -59,13 +49,15 @@ export class UsersController {
         };
     }
 
-    @Get()
+    @Post()
     @Role(UserRole.ADMIN)
-    async findUsers(@Query() query: FindUsersQueryDto) {
-        const found = await this.usersService.findUsers(query);
+    async createAdminUser(
+        @Body(ValidationPipe) createUserDto: CreateUserDto,
+    ): Promise<ReturnUserDto> {
+        const user = await this.usersService.createAdminUser(createUserDto);
         return {
-            found,
-            message: 'Usuários encontrados',
+            user,
+            message: 'Administrador cadastrado com sucesso',
         };
     }
 
@@ -83,5 +75,22 @@ export class UsersController {
         } else {
             return this.usersService.updateUser(updateUserDto, id);
         }
+    }
+
+    @Delete(':id')
+    async removeUser(
+        @Param('id') id: string,
+        @Req() req: AuthenticatedRequest,
+    ): Promise<ReturnUserDto> {
+        if (req.user.role != UserRole.ADMIN && req.user!.id!.toString() != id) {
+            throw new ForbiddenException(
+                'Você não tem autorização para acessar esse recurso',
+            );
+        }
+        const user = await this.usersService.removeUser(id);
+        return {
+            user,
+            message: 'Usuário excluído com sucesso',
+        };
     }
 }

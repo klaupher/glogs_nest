@@ -21,7 +21,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             ? exception.getStatus()
             : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        const defaultMessage = 'Internal Server Error';
+        const defaultMessage = 'Erro interno inesperado';
         const defaultError = 'Internal Server Error';
         let messages: string[] = [defaultMessage];
         let errorName = defaultError;

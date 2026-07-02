@@ -116,6 +116,10 @@ export class UserRepository {
         await user.save();
     }
 
+    async removeUser(id: string) {
+        await this.repo.delete({ id });
+    }
+
     private async hashPassword(
         password: string,
         salt: string,
