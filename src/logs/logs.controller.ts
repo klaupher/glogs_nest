@@ -4,24 +4,30 @@ import {
     Get,
     Post,
     Query,
+    Req,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
 import { InsertLogsDto } from './dtos/insert-logs.dto';
 import { LogsService } from './logs.service';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { FindLogsQueryDto } from './dtos/find-logs-query.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { type AuthenticatedRequest } from '../auth/types/authenticated-request';
+import { Logs } from './logs.entity';
 
 @Controller('logs')
-@UseGuards(AuthGuard(), RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class LogsController {
     constructor(private readonly logsService: LogsService) {}
 
     @Post()
-    async insertNewLogs(@Body(ValidationPipe) insertLogsDto: InsertLogsDto) {
+    async insertNewLogs(
+        @Body(ValidationPipe) insertLogsDto: InsertLogsDto,
+        @Req() req: AuthenticatedRequest,
+    ) {
         console.log('Dados recebidos ', insertLogsDto);
-        const logs = await this.logsService.insertLogs(insertLogsDto);
+        const logs = await this.logsService.insertLogs(insertLogsDto, req.user);
         return {
             id: logs.id,
             message: 'Logs inserido com sucesso.',

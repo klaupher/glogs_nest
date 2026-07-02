@@ -50,7 +50,7 @@ Content-Type: application/json
   "email": "{{userEmailForTesting}}",
   "name": "{{userNameForTesting}}",
   "password": "{{userPasswordForTesting}}",
-  "passwordConfirmation": "{{userPasswordForTesting}}",
+  "passwordConfirmation": "{{userPasswordForTesting}}"
 }
 
 ### Auth Me
@@ -120,4 +120,31 @@ Authorization: Bearer {{jwtToken}}
 ### Delete one user
 # @name deleteOneUser
 DELETE {{baseUrl}}/user/{{idUser}}
+Authorization: Bearer {{jwtToken}}
+
+# LOGS ########################################################################
+
+### Insert New Logs
+# @name insertNewLogs
+POST {{baseUrl}}/logs
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "apiName": "API-GENERICA",
+    "description": "Será que está tudo certo mesmo no reino da Dinamarca?",
+    "level": "WARNING",
+    "environment": "DEV"
+}
+
+### Get Logs
+# @name getLogs
+GET {{baseUrl}}/logs
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Filter Logs
+# @name filterLogs
+GET {{baseUrl}}/logs/filter?apiName=API-GENERICA&level=INFO
+Content-Type: application/json
 Authorization: Bearer {{jwtToken}}

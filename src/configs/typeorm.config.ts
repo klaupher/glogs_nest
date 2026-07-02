@@ -21,8 +21,8 @@ export const typeOrmConfig = (): TypeOrmModuleOptions => {
         password: process.env.DB_PASSWORD?.toString() || 'postgres',
         database: process.env.DB_DATABASE?.toString() || 'postgres',
         schema: process.env.DB_SCHEMA?.toString() || 'public',
-        synchronize: process.env.DB_SYNCHRONIZE === '1',
-        autoLoadEntities: process.env.DB_AUTO_LOAD_ENTITIES === '1',
+        synchronize: syncronizer,
+        autoLoadEntities: autoLoader,
     };
 };
 

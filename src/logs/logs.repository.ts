@@ -11,6 +11,7 @@ import {
     firstDayOfMonth,
     lastDayOfMonth,
 } from '../shared/utils/date-time-functions';
+import { User } from '../users/user.entity';
 
 export class LogsRepository {
     constructor(
@@ -18,10 +19,14 @@ export class LogsRepository {
         private readonly repo: Repository<Logs>,
     ) {}
 
-    async insertLogs(insertLogsDto: InsertLogsDto): Promise<Logs> {
+    async insertLogs(
+        insertLogsDto: InsertLogsDto,
+        userLogged: User,
+    ): Promise<Logs> {
         const { apiName, level, description, environment } = insertLogsDto;
 
         const logs = new Logs();
+        logs.userSent = userLogged;
         logs.apiName = apiName;
         logs.description = description ?? {};
         logs.level = level;
